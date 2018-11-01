@@ -1,0 +1,9 @@
+{
+  "name": "node-win32-np",
+  "license": "MIT",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {
+    "nan": "2.10.0"
+  }
+}
