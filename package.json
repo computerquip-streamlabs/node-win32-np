@@ -1,9 +1,16 @@
 {
   "name": "node-win32-np",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
+  "files": [
+    "binding.gyp",
+    "src/"
+  ],
+  "os": [
+    "win32"
+  ],
   "devDependencies": {
-    "nan": "2.10.0"
+    "node-addon-api": "^1.5.0"
   }
 }

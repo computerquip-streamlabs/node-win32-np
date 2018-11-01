@@ -9,16 +9,28 @@ include(NodeJS)
 
 nodejs_init()
 
-add_nodejs_module(${MODULE_NAME} src/module.cpp)
+add_nodejs_module(
+	${MODULE_NAME}
+	src/module.cpp
+	src/client.cpp src/client.hpp
+	src/server.cpp src/server.hpp
+	src/common.cpp src/common.hpp
+	src/utility.hpp
+)
 
-target_include_directories(${MODULE_NAME} PRIVATE asio/asio/include)
+target_include_directories(
+	${MODULE_NAME}
+	PRIVATE ${node-win32-np_SOURCE_DIR}/node_modules/node-addon-api
+)
+
 target_compile_definitions(${MODULE_NAME} PRIVATE ASIO_STANDALONE)
 
 if (MSVC)
 	target_compile_options(${MODULE_NAME} PRIVATE "/wd4251")
 endif ()
 
-target_compile_definitions(${MODULE_NAME}
+target_compile_definitions(
+	${MODULE_NAME}
 	PRIVATE
 		-D_WIN32_WINNT=0x0601
 		-DWINVER=0x0601
