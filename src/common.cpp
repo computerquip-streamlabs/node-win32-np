@@ -177,8 +177,13 @@ Napi::Value common::read_until(const Napi::CallbackInfo& info)
 	 * carryover, use the entire buffer
 	 * as the first buffer sent back */
 	if (find_result != -1) {
-		result_array.Set((uint32_t)0, this->use_partial_carryover(env, find_result));
-		++array_offset;
+		size_t chunk_size = find_result + token.size();
+		result_array.Set(
+			(uint32_t)0,
+			this->use_partial_carryover(env, chunk_size)
+		);
+
+		return result_array;
 	}
 
 	for (;;) {
@@ -229,7 +234,7 @@ Napi::Value common::read_until(const Napi::CallbackInfo& info)
 
 		/* We have a partial match. We need a carryover value. */
 		auto new_buffer = this->use_partial_buffer(
-			env, chunk, bytes_read, find_result
+			env, chunk, bytes_read, find_result + token.size()
 		);
 
 		result_array.Set((uint32_t)array_offset, new_buffer);
