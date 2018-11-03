@@ -4,12 +4,10 @@
   "version": "1.0.4",
   "main": "main.js",
   "files": [
-    "binding.gyp",
-    "src/"
+    "node_win32_np.node"
   ],
-  "os": [
-    "win32"
-  ],
+  "os": [ "win32" ],
+  "cpu": [ "x64" ],
   "devDependencies": {
     "node-addon-api": "^1.5.0"
   }
