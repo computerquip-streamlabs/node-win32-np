@@ -1,7 +1,7 @@
 {
   "name": "node-win32-np",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "main.js",
   "files": [
     "binding.gyp",
