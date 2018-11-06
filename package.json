@@ -1,7 +1,7 @@
 {
   "name": "node-win32-np",
   "license": "MIT",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "main.js",
   "files": [
     "node_win32_np.node"
