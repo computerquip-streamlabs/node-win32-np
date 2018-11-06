@@ -1,12 +1,19 @@
 #include "common.hpp"
 #include "utility.hpp"
 
+template <typename T>
+static void buffer_finalizer(Napi::Env env, T *data)
+{
+	delete [] data;
+}
+
 Napi::Value common::use_carryover(Napi::Env env)
 {
 	auto result = Napi::Buffer<char>::New(
 		env,
 		carryover_buffer,
-		(uint32_t)carryover_size
+		carryover_size,
+		buffer_finalizer<char>
 	);
 
 	carryover_buffer = nullptr;
@@ -30,7 +37,8 @@ Napi::Value common::use_partial_carryover(Napi::Env env, size_t chunk_size)
 	auto result = Napi::Buffer<char>::New(
 		env,
 		carryover_buffer,
-		(uint32_t)chunk_size
+		chunk_size,
+		buffer_finalizer<char>
 	);
 
 	carryover_buffer = new_carryover;
@@ -46,7 +54,7 @@ Napi::Value common::use_partial_buffer(
   size_t size,
   size_t offset
 ) {
-	free(carryover_buffer);
+	delete [] carryover_buffer;
 
 	size_t remainder = size - offset;
 	char *new_carryover = new char[remainder];
@@ -56,7 +64,9 @@ Napi::Value common::use_partial_buffer(
 
 	auto result = Napi::Buffer<char>::New(
 		env,
-		buffer, offset
+		buffer,
+		offset,
+		buffer_finalizer<char>
 	);
 
 	carryover_size = remainder;
@@ -115,7 +125,7 @@ Napi::Value common::read(const Napi::CallbackInfo& info)
 		);
 
 		if (success == FALSE) {
-			free(result_buffer);
+			delete [] result_buffer;
 			auto error = handle_os_error(env, "ReadFile");
 			throw error;
 		}
@@ -126,7 +136,8 @@ Napi::Value common::read(const Napi::CallbackInfo& info)
 	auto new_buffer = Napi::Buffer<char>::New(
 		env,
 		result_buffer,
-		(uint32_t)bytes_to_read
+		bytes_to_read,
+		buffer_finalizer<char>
 	);
 
 	result_array.Set(array_offset, new_buffer);
@@ -201,7 +212,7 @@ Napi::Value common::read_until(const Napi::CallbackInfo& info)
 		);
 
 		if (success == FALSE) {
-			free(chunk);
+			delete [] chunk;
 			auto error = handle_os_error(env, "ReadFile");
 			throw error;
 		}
@@ -211,7 +222,9 @@ Napi::Value common::read_until(const Napi::CallbackInfo& info)
 		if (find_result == -1) {
 			auto new_buffer = Napi::Buffer<char>::New(
 				env,
-				chunk, bytes_read
+				chunk,
+				bytes_read,
+				buffer_finalizer<char>
 			);
 
 			result_array.Set((uint32_t)array_offset, new_buffer);
@@ -225,7 +238,8 @@ Napi::Value common::read_until(const Napi::CallbackInfo& info)
 			auto new_buffer = Napi::Buffer<char>::New(
 				env,
 				chunk,
-				bytes_read
+				bytes_read,
+				buffer_finalizer<char>
 			);
 
 			result_array.Set((uint32_t)array_offset, new_buffer);
