@@ -23,10 +23,6 @@ target_include_directories(
 	PRIVATE ${node-win32-np_SOURCE_DIR}/node_modules/node-addon-api
 )
 
-if (MSVC)
-	target_compile_options(${MODULE_NAME} PRIVATE "/wd4251")
-endif ()
-
 target_compile_definitions(
 	${MODULE_NAME}
 	PRIVATE
